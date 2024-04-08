@@ -49,13 +49,14 @@ jobs:
         env:
           SONAR_HOST_URL: ${{secrets.SONAR_HOST_URL}}
         uses: SonarSource/sonarqube-github-c-cpp@v1
-      - name: Run build-wrapper
+      - name: Generate compilation database
         run: |
-          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} "cmake /path/to/source minimum/linear/; make"
+          mkdir build
+          cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=On -S . -B build
       - name: Run sonar-scanner 2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_2 }}
           SONAR_HOST_URL: ${{secrets.SONAR_HOST_URL}}
         run: |
-          sonar-scanner --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" -Dsonar.projectBaseDir="minimum/linear/"
+          sonar-scanner --define sonar.cfamily.compile-commands=build/compile_commands.json -Dsonar.projectBaseDir="minimum/linear/"
