@@ -33,7 +33,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_1 }}
           SONAR_HOST_URL: ${{secrets.SONAR_HOST_URL}}
         run: |
-          sonar-scanner --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" -Dsonar.projectBaseDir='minimum/ai/'
+          sonar-scanner --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" -Dsonar.projectBaseDir="minimum/ai/"
   sonarQubeScan2:
     name: sonarQube Scan 2
     runs-on: ubuntu-latest
@@ -56,5 +56,4 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_2 }}
           SONAR_HOST_URL: ${{secrets.SONAR_HOST_URL}}
         run: |
-          sonar-scanner --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" -Dsonar.projectBaseDir='minimum/linear/'
-        # Add other scan jobs if you wish to scan more projects in the monorepo   
+          sonar-scanner --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" -Dsonar.projectBaseDir="minimum/linear/"
