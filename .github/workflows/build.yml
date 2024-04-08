@@ -28,7 +28,7 @@ jobs:
       - name: Run build-wrapper
         run: |
           echo "cmake /path/to/source minimum/ai/; make" > myBuild.sh
-          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} "SH -c myBuild.sh" 
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} "bash -c myBuild.sh" 
       - name: Run sonar-scanner 1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
