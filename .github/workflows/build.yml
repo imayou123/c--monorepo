@@ -1,0 +1,64 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master # the name of your main branch
+    paths:
+      - 'minimum/ai/**' # the paths to your monorepo projects from the monorepo root directory
+      - 'minimum/linear/**'
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarQubeScan1:
+    name: sonarQube Scan 1
+    runs-on: ubuntu-latest
+    env:
+      BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Install sonar-scanner and build-wrapper
+        env:
+          SONAR_HOST_URL: ${{secrets.SONAR_HOST_URL}}
+        uses: SonarSource/sonarqube-github-c-cpp@v1
+      - name: Run build-wrapper
+        run: |
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} <insert_your_clean_build_command>
+      - name: Run sonar-scanner 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_1 }}
+          SONAR_HOST_URL: ${{secrets.SONAR_HOST_URL}}
+        run: |
+          sonar-scanner --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"
+        with:
+          projectBaseDir: minimum/ai/ # the path to your project from the monorepo root directory (TO BE CONFIRMED)
+  sonarQubeScan2:
+    name: sonarQube Scan 2
+    runs-on: ubuntu-latest
+    env:
+      BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Install sonar-scanner and build-wrapper
+        env:
+          SONAR_HOST_URL: ${{secrets.SONAR_HOST_URL}}
+        uses: SonarSource/sonarqube-github-c-cpp@v1
+      - name: Run build-wrapper
+        run: |
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} <insert_your_clean_build_command>
+      - name: Run sonar-scanner 2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_2 }}
+          SONAR_HOST_URL: ${{secrets.SONAR_HOST_URL}}
+        run: |
+          sonar-scanner --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"
+        with:
+          projectBaseDir: minimum/linear/ # the path to your project from the monorepo root directory (TO BE CONFIRMED)
+  # Add other scan jobs if you wish to scan more projects in the monorepo   
