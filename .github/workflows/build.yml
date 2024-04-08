@@ -9,6 +9,7 @@ on:
       - 'minimum/linear/**'
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 jobs:
   sonarQubeScan1:
