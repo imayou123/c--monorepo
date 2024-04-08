@@ -24,9 +24,11 @@ jobs:
         env:
           SONAR_HOST_URL: ${{secrets.SONAR_HOST_URL}}
         uses: SonarSource/sonarqube-github-c-cpp@v1
+        
       - name: Run build-wrapper
         run: |
-          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} "cmake /path/to/source minimum/ai/ ; make" 
+          echo "cmake /path/to/source minimum/ai/; make" > myBuild.sh
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} "SH -c myBuild.sh" 
       - name: Run sonar-scanner 1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
